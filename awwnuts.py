@@ -44,21 +44,27 @@ def main(base_url, opts):
     local_urls = tree.xpath("//a[starts-with(@href,'/')]/@href")
     scoped_urls = tree.xpath("//a[contains(@href,'%s')]/@href" % base_url)
 
+    total = 0
+    fails = 0
     for url in set(local_urls):
+        total += 1
         # print url
-        sys.stdout.write("Checking %s%s " % (base_url, url))
         if not check(base_url + url):
-            print colored("Fail", 'red')
+            fails += 1
+            print "%s %s%s" % (colored("Fail", 'red'), base_url, url)
         else:
-            print colored("Pass", "green")
+            print "%s %s%s" % (colored("Pass", 'green'), base_url, url)
 
     for url in set(scoped_urls):
-        sys.stdout.write("Checking %s " % (url))
+        total += 1
         if not check(url):
-            print colored("Fail", 'red')
+            fails += 1
+            print "%s %s" % (colored("Fail", 'red'), url)
         else:
-            print colored("Pass", "green")
+            print "%s %s" % (colored("Pass", 'green'), url)
 
+    sys.stdout.write("\n\n")
+    print "Finished %s, %s" % (colored("%d total" % total, 'green'), colored("%d errors" % fails, 'red'))
 
 if __name__ == "__main__":
     parser = OptionParser(version='%prog',

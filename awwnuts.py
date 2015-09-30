@@ -51,7 +51,7 @@ def main(base_url, opts):
         # print url
         if not check(base_url + url):
             fails += 1
-            print "%s %s%s" % (colored("Fail", 'red'), base_url, url)
+            print colored("FAIL %s%s" % (base_url, url), 'red')
         else:
             print "%s %s%s" % (colored("Pass", 'green'), base_url, url)
 
@@ -59,7 +59,7 @@ def main(base_url, opts):
         total += 1
         if not check(url):
             fails += 1
-            print "%s %s" % (colored("Fail", 'red'), url)
+            print colored("FAIL %s" % url, 'red')
         else:
             print "%s %s" % (colored("Pass", 'green'), url)
 

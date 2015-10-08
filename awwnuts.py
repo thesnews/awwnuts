@@ -76,24 +76,36 @@ def main(base_url, opts):
     fails = 0
     for url in set(local_urls):
         total += 1
-        # print url
-        if not check(base_url + url):
+        try:
+            # print url
+            if not check(base_url + url):
+                fails += 1
+                print colored("FAIL %s%s" % (base_url, url), 'red')
+                if doScrapePage:
+                    ret = check_output("%s %s%s" % (scrapeCommand, base_url, url), shell=True)
+            else:
+                print "%s %s%s" % (colored("Pass", 'green'), base_url, url)
+        except:
             fails += 1
-            print colored("FAIL %s%s" % (base_url, url), 'red')
+            print colored("PARSE ERROR %s%s" % (base_url, url), 'red')
             if doScrapePage:
                 ret = check_output("%s %s%s" % (scrapeCommand, base_url, url), shell=True)
-        else:
-            print "%s %s%s" % (colored("Pass", 'green'), base_url, url)
 
     for url in set(scoped_urls):
         total += 1
-        if not check(url):
+        try:
+            if not check(url):
+                fails += 1
+                print colored("FAIL %s" % url, 'red')
+                if doScrapePage:
+                    ret = check_output("%s %s" % (scrapeCommand, url), shell=True)
+            else:
+                print "%s %s" % (colored("Pass", 'green'), url)
+        except:
             fails += 1
-            print colored("FAIL %s" % url, 'red')
+            print colored("PARSE ERROR %s" % url, 'red')
             if doScrapePage:
                 ret = check_output("%s %s" % (scrapeCommand, url), shell=True)
-        else:
-            print "%s %s" % (colored("Pass", 'green'), url)
 
     sys.stdout.write("\n\n")
     print "Finished %s, %s" % (colored("%d total" % total, 'green'), colored("%d errors" % fails, 'red'))
